@@ -14,3 +14,5 @@ Backend service for a stock market dashboard application.
 
 ## API Endpoint
 GET /api/stock-details?symbol=INFY
+
+### Created By : Rishabh Tiwari
