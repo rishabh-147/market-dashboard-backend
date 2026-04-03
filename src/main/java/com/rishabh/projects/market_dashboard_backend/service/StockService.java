@@ -1,29 +1,46 @@
 package com.rishabh.projects.market_dashboard_backend.service;
 
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.rishabh.projects.market_dashboard_backend.config.ApplicationConfiguration;
 import com.rishabh.projects.market_dashboard_backend.model.dto.StockResponseDTO;
+import com.rishabh.projects.market_dashboard_backend.webClients.FinnhubClient;
 
+/**
+ * Service layer responsible for business logic related to stocks.
+ *
+ * <p>
+ * This class coordinates between controllers and external API clients. It also
+ * serves as the correct place for:
+ * </p>
+ * <ul>
+ * <li>Business validations</li>
+ * <li>Error handling and interpretation</li>
+ * <li>Fallback strategies (future)</li>
+ * </ul>
+ */
 @Service
 public class StockService {
-	public ResponseEntity<?> probableSearch(String symbol) {
-		String URI = ApplicationConfiguration.BASE_URL_FINNHUB
-				.concat(ApplicationConfiguration.ENDPOINT_FINNHUB_SEARCH_SYMBOL).concat(symbol).concat(ApplicationConfiguration.CONSTANT_FINNHUB_NSE_EXCHANGE)
-				.concat(ApplicationConfiguration.TOKEN_FINNHUB);
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<StockResponseDTO> response = restTemplate.getForEntity(URI, StockResponseDTO.class);
 
-		HttpStatusCode statusCode = response.getStatusCode();
-		if (statusCode.is2xxSuccessful()) {
-			System.out.println("Response Successful :: "+response.toString());
-			
-		} else {	
-			System.out.println("Response Failed!");
+	
+	private final FinnhubClient finnhubClient;
+
+	public StockService(FinnhubClient finnhubClient) {
+		this.finnhubClient = finnhubClient;
+	}
+
+	public StockResponseDTO getSearchResults(String symbol) {
+
+		StockResponseDTO response = finnhubClient.getSearchResults(symbol);
+
+		if (ObjectUtils.isEmpty(response)) {
+			// 🔥 This is where error interpretation should go
+			throw new RuntimeException("Failed to \"getSearchResults\" fetch stock data from Finnhub");
 		}
+
 		return response;
 	}
 }
