@@ -1,15 +1,16 @@
 package com.rishabh.projects.market_dashboard_backend.webClients;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.rishabh.projects.market_dashboard_backend.config.ApplicationConfiguration;
-import com.rishabh.projects.market_dashboard_backend.model.dto.StockResponseDTO;
+import com.rishabh.projects.market_dashboard_backend.model.finnHub.clientResponse.FinnhubResponseDTO;
+
 
 /**
  * Client class responsible for interacting with the Finnhub API.
@@ -36,6 +37,8 @@ import com.rishabh.projects.market_dashboard_backend.model.dto.StockResponseDTO;
  */
 @Component
 public class FinnhubClient {
+	
+	private static final Logger logger = LoggerFactory.getLogger(FinnhubClient.class);
 
 	private final RestTemplate restTemplate;
 
@@ -46,13 +49,17 @@ public class FinnhubClient {
 		this.config = config;
 	}
 
-	public StockResponseDTO getSearchResults(String symbol) {
+	public FinnhubResponseDTO getSearchResults(String symbol) {
 
 		String url = UriComponentsBuilder.fromUriString(config.getBaseUrlFinnhub() + "search").queryParam("q", symbol)
 				.queryParam("exchange", "NS").queryParam("token", config.getApiKeyFinnhub()).toUriString();
-
-		ResponseEntity<StockResponseDTO> response = restTemplate.getForEntity(url, StockResponseDTO.class);
-
+		
+		logger.info("FinnhubClient :: URL [{}] ",url);
+		
+		ResponseEntity<FinnhubResponseDTO> response = restTemplate.getForEntity(url, FinnhubResponseDTO.class);
+		
+		logger.info("FinnhubClient :: Fetch successful ::  ",response.getStatusCode());
+		
 		return response.getStatusCode().is2xxSuccessful() ? response.getBody() : null;
 	}
 }

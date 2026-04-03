@@ -1,13 +1,15 @@
 package com.rishabh.projects.market_dashboard_backend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.client.RestTemplate;
 
-import com.rishabh.projects.market_dashboard_backend.config.ApplicationConfiguration;
-import com.rishabh.projects.market_dashboard_backend.model.dto.StockResponseDTO;
+import com.rishabh.projects.market_dashboard_backend.model.finnHub.clientResponse.FinnhubResponseDTO;
+import com.rishabh.projects.market_dashboard_backend.webClients.AlphaVantageClient;
 import com.rishabh.projects.market_dashboard_backend.webClients.FinnhubClient;
+
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Service layer responsible for business logic related to stocks.
@@ -25,22 +27,36 @@ import com.rishabh.projects.market_dashboard_backend.webClients.FinnhubClient;
 @Service
 public class StockService {
 
+	private final Logger logger = LoggerFactory.getLogger(StockService.class);
 	
 	private final FinnhubClient finnhubClient;
+	private final AlphaVantageClient alphaVantageClient;
 
-	public StockService(FinnhubClient finnhubClient) {
+	public StockService(FinnhubClient finnhubClient, AlphaVantageClient alphaVantageClient) {
 		this.finnhubClient = finnhubClient;
+		this.alphaVantageClient = alphaVantageClient;
 	}
 
-	public StockResponseDTO getSearchResults(String symbol) {
-
-		StockResponseDTO response = finnhubClient.getSearchResults(symbol);
-
+	public FinnhubResponseDTO getSearchResults(String symbol) {
+		logger.info("getSearchResults :: symbol [{}] ",symbol);
+		
+		FinnhubResponseDTO response = finnhubClient.getSearchResults(symbol);
+		
 		if (ObjectUtils.isEmpty(response)) {
 			// 🔥 This is where error interpretation should go
+			logger.error("Failed to \"getSearchResults\" fetch stock[ {} ]data from Finnhub" ,symbol);
 			throw new RuntimeException("Failed to \"getSearchResults\" fetch stock data from Finnhub");
 		}
-
+		
+		logger.info("getSearchResults :: symbol [{}] :: responded ",symbol);
 		return response;
+	}
+	
+	public FinnhubResponseDTO getQuote(String symbol) {
+		logger.info("getQuote :: For symbol : {}",symbol);
+		String jsonResponse = alphaVantageClient.getDailyStock(symbol);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		return null;
 	}
 }
