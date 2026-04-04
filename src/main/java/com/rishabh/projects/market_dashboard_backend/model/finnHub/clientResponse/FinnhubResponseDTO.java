@@ -12,11 +12,3 @@ public class FinnhubResponseDTO {
 	
 
 }
-
-@Data
-class ResultItem {
-	private String description;
-	private String displaySymbol;
-	private String symbol;
-	private String type;
-}

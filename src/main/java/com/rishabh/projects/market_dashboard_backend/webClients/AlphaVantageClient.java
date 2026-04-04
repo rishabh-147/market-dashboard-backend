@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.rishabh.projects.market_dashboard_backend.config.ApplicationConfiguration;
+import com.rishabh.projects.market_dashboard_backend.model.alphaVantage.clientResponse.AlphaVantageResponse;
 
 @Component
 public class AlphaVantageClient {
@@ -22,16 +23,16 @@ public class AlphaVantageClient {
 		this.configuration = configuration;
 	}
 
-	public String getDailyStock(String symbol) {
+	public AlphaVantageResponse getDailyStock(String symbol) {
 		String url = configuration.getBaseUrlAlphaVantage() + "?function=TIME_SERIES_DAILY" + "&symbol=" + symbol
 				+ "&apikey=" + configuration.getApiKeyAlphaVantage();
 		
 		logger.info("AlphaVantageWebClient :: URL [{}] ",url);
 		
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		AlphaVantageResponse response = restTemplate.getForObject(url, AlphaVantageResponse.class);
 		
-		logger.info("AlphaVantageWebClient :: Fetch successful ::  ",response.getStatusCode());
+		logger.info("AlphaVantageWebClient :: Fetch successful ");
 		
-		return response.getBody();
+		return response;
 	}
 }

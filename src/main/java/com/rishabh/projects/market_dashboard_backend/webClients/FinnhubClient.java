@@ -56,10 +56,10 @@ public class FinnhubClient {
 		
 		logger.info("FinnhubClient :: URL [{}] ",url);
 		
-		ResponseEntity<FinnhubResponseDTO> response = restTemplate.getForEntity(url, FinnhubResponseDTO.class);
+		FinnhubResponseDTO response = restTemplate.getForObject(url, FinnhubResponseDTO.class);
 		
-		logger.info("FinnhubClient :: Fetch successful ::  ",response.getStatusCode());
+		logger.info("FinnhubClient :: Fetch successful ::  ");
 		
-		return response.getStatusCode().is2xxSuccessful() ? response.getBody() : null;
+		return response;
 	}
 }

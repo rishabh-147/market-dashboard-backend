@@ -17,13 +17,3 @@ public class StockDetailsDTO implements Serializable{
 
 	private List<StockPriceDetails> priceDetails;
 }
-
-@Data
-class StockPriceDetails{
-	private String date;
-	private String open;
-	private String high;
-	private String low;
-	private String close;
-	private String volume;
-}
