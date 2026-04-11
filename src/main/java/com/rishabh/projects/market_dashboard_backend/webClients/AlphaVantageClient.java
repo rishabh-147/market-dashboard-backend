@@ -24,7 +24,7 @@ public class AlphaVantageClient {
 	}
 
 	public AlphaVantageResponse getDailyStock(String symbol) {
-		String url = configuration.getBaseUrlAlphaVantage() + "?function=TIME_SERIES_DAILY" + "&symbol=" + symbol
+		String url = configuration.getBaseUrlAlphaVantage() + "?function=TIME_SERIES_DAILY" + "&symbol=" + symbol + ".BSE"
 				+ "&apikey=" + configuration.getApiKeyAlphaVantage();
 		
 		logger.info("AlphaVantageWebClient :: URL [{}] ",url);
