@@ -30,8 +30,10 @@ public class StockController {
 
 	@GetMapping("/quote/{symbol}")
 	public ResponseEntity<?> quote(@PathVariable("symbol") String symbol) {
+		String stockName = symbol.substring(symbol.indexOf('-')+1);
+		symbol = symbol.substring(0, symbol.indexOf('-'));
 		logger.info(":: /quote/{} :: ", symbol);
-		return ResponseEntity.ok(stockService.getQuote(symbol));
+		return ResponseEntity.ok(stockService.getQuote(symbol, stockName));
 	}
 
 }
