@@ -13,6 +13,7 @@ public class StockDetailsDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private String symbol;
+	private String stockName;
 	private String lastRefresh;
 
 	private List<StockPriceDetails> priceDetails;

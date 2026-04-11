@@ -62,11 +62,12 @@ public class StockService {
 		return searchResponseDTO;
 	}
 
-	public StockDetailsDTO getQuote(String symbol) {
+	public StockDetailsDTO getQuote(String symbol, String stockName) {
 		logger.info("getQuote :: For symbol : {}", symbol);
 		AlphaVantageResponse response = alphaVantageClient.getDailyStock(symbol);
 
 		StockDetailsDTO detailsDTO = vantageLocalObjectMapper.mapToStockDetails(response);
+		detailsDTO.setStockName(stockName);
 
 		if (ObjectUtils.isEmpty(detailsDTO)) {
 			// 🔥 This is where error interpretation should go
