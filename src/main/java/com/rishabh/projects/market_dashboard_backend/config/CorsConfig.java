@@ -15,7 +15,8 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         .allowedOrigins(
                             "http://localhost:3000",
-                            "https://rishabh-147.github.io/"
+                            "https://rishabh-147.github.io/",
+                            "https://market-dashboard-frontend-9z4q.vercel.app"
                         )
                         .allowedMethods("*");
             }
